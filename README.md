@@ -1,4 +1,4 @@
-# Statistical Arbitrage: Pairs Trading
+# Statistical Arbitrage: Pairs Trading ![visitors](https://visitor-badge.laobi.icu/badge?page_id=arnavkohli.statistical-arbitrage-pairs-trading)
 
 This project aims to perform statistical arbitrage backtesting on select stock pairs from the NIFTY 50 index.
 
