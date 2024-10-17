@@ -15,6 +15,9 @@ There are several tests to detect cointegration, but this project utilizes the *
 - We analyze stocks from the **NIFTY 50** index over the years **2017 to 2022**.
 - Relationships between constituent stocks are observed, and pairs that pass the ADF test are shortlisted.
 - The shortlisted pairs are backtested using data from the year **2023** to evaluate the strategy’s performance.
+- **Example**: Below is a screenshot from the backtesting process for the **ASIANPAINTS** and **BAJFINANCE** pair:
+
+![Backtesting Example](./imgs/asianpaint-bajfinance.png)
 
 ## Main Notebooks
 
