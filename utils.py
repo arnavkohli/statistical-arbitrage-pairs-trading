@@ -4,6 +4,24 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import adfuller
 
+
+def append_trade_statistic_columns(trades_data):
+    if len(trades_data) == 0:   raise Exception("there is no trades data")
+
+    trades_data['short_net_perc'] = (trades_data['short_entry_price'] - trades_data['short_exit_price']) / trades_data['short_entry_price']
+    trades_data['long_net_perc'] = (trades_data['long_exit_price'] - trades_data['long_entry_price']) / trades_data['long_entry_price']
+
+    trades_data['entry_date'] = pd.to_datetime(trades_data['entry_date'])
+    trades_data['exit_date'] = pd.to_datetime(trades_data['exit_date'])
+    trades_data['duration'] = (trades_data['exit_date'] - trades_data['entry_date']).apply(lambda x: pd.Timedelta(x).days)
+    
+
+    trades_data['net_perc'] = trades_data.apply(
+        lambda row: (row['short_net_perc']*row['short_ticker_wt'] + row['long_net_perc']*row['long_ticker_wt'])
+    )
+
+    return trades_data
+
 def plot(t, ticker1, ticker2, res_mean , overval_cutoff, underval_cutoff):
     '''
         Function to plot the prices of the pairs, their residuals and the trade signals.
