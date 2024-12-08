@@ -48,7 +48,7 @@ def plot(t, ticker1, ticker2, res_mean , overval_cutoff, underval_cutoff):
                             arrowprops=dict(facecolor='red', shrink=0.05), fontsize=10, color='red')
             axs[1].annotate('Buy', xy=(date, row[ticker1]), xytext=(date, row[ticker1] + 50),
                             arrowprops=dict(facecolor='green', shrink=0.05), fontsize=10, color='green')
-        elif signal == 'exit overval':
+        elif 'exit overval' in signal:
             axs[1].annotate('Sell', xy=(date, row[ticker1]), xytext=(date, row[ticker1] + 50),
                             arrowprops=dict(facecolor='red', shrink=0.05), fontsize=10, color='red')
             axs[2].annotate('Buy', xy=(date, row[ticker2]), xytext=(date, row[ticker2] + 50),
@@ -58,7 +58,7 @@ def plot(t, ticker1, ticker2, res_mean , overval_cutoff, underval_cutoff):
                             arrowprops=dict(facecolor='red', shrink=0.05), fontsize=10, color='red')
             axs[2].annotate('Buy', xy=(date, row[ticker2]), xytext=(date, row[ticker2] + 50),
                             arrowprops=dict(facecolor='green', shrink=0.05), fontsize=10, color='green')
-        elif signal == 'exit underval':
+        elif 'exit underval' in signal:
             axs[2].annotate('Sell', xy=(date, row[ticker2]), xytext=(date, row[ticker2] + 50),
                             arrowprops=dict(facecolor='red', shrink=0.05), fontsize=10, color='red')
             axs[1].annotate('Buy', xy=(date, row[ticker1]), xytext=(date, row[ticker1] + 50),
