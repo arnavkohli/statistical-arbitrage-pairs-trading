@@ -2,6 +2,7 @@ class PairPosition:
     def __init__(
         self,
         id,
+        type,
         strategy_id,
         long_ticker,
         short_ticker,
@@ -13,6 +14,7 @@ class PairPosition:
         # capital_allocated_as_a_perc_of_total_capital
 
         self._id = id
+        self._type = type
         self._strategy_id = strategy_id
 
         self._long_ticker = long_ticker
@@ -38,6 +40,9 @@ class PairPosition:
     
     def get_strategy_id(self):
         return getattr(self, '_strategy_id')
+    
+    def get_type(self):
+        return getattr(self, '_type')
 
     def get_long_ticker(self):
         return getattr(self, '_long_ticker')

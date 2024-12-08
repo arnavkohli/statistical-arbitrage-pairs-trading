@@ -1,9 +1,10 @@
 import pandas as pd
 import statsmodels.api as sm
 
+from objects.signalprocessor import SignalProcessor
 
 
-class PairBacktester:
+class PairsBacktester:
     def __init__(
         self,
         portfolio,
@@ -29,7 +30,7 @@ class PairBacktester:
     
     def find_pair_strategy_by_id(self, id):
         for strategy in self.get_pair_strategies():
-            if strategy.get('_id') == id:   return strategy
+            if strategy.get_id() == id:   return strategy
         raise Exception(f'strategy with id `{id}` not found')
     
     def check_for_exit_signals(self, data_row):
@@ -37,25 +38,27 @@ class PairBacktester:
         for position in self.get_open_positions():
             # Lookup strategy object using strategy_id from position
             pair_strategy = self.find_pair_strategy_by_id(position.get_strategy_id())
+            pair_position_type = position.get_type()
 
-            if SignalProcessor.exit_signal(data_row, position, pair_strategy):
-                self.get_portfolio().exit_position(
-                    data_row,
-                    position,
-                    pair_strategy
-                )
+            if pair_position_type == 'underval':
+                if SignalProcessor.underval_exit_signal(data_row, pair_strategy):
+                    print ('exiting underval')
+                    self.get_portfolio().exit_position()
+            elif pair_position_type == 'overval':
+                if SignalProcessor.overval_exit_signal(data_row, pair_strategy):
+                    print ('exiting overval')
+                    self.get_portfolio().exit_position()
 
     def check_for_entry_signals(self, data_row):
         # Filter out stratgies which are already running
         active_strategy_ids = self.get_active_strategies()
-        inactive_strategies = [strategy for strategy in self.get_pair_strategies() if strategy.get('_id') not in active_strategy_ids]
+        inactive_strategies = [strategy for strategy in self.get_pair_strategies() if strategy.get_id() not in active_strategy_ids]
         
         for inactive_strategy in inactive_strategies:
-            if SignalProcessor.entry_signal(data_row, inactive_strategy): # Add check for available funds
-                self.get_portfolio().enter_position(
-                    data_row=data_row,
-                    strategy=inactive_strategy,
-                )
+            if SignalProcessor.overval_entry_signal(data_row, inactive_strategy):
+                self.get_portfolio().enter_overval_position(data_row, inactive_strategy)
+            elif SignalProcessor.underval_entry_signal(data_row, inactive_strategy):
+                self.get_portfolio().enter_underval_position(data_row, inactive_strategy)
 
     # def update_open_positions(self, data_row):
     #     for position in self.get_portfolio().get_open_positions():
@@ -96,11 +99,11 @@ class PairBacktester:
 
             self.check_for_entry_signals(data_row)
 
-            # Update open_positions
-            self.update_open_positions(data_row)
+            # # Update open_positions
+            # self.update_open_positions(data_row)
 
-            self.log_open_positions(date)
-            self.log_closed_positions(date)
+            # self.log_open_positions(date)
+            # self.log_closed_positions(date)
         
 
 

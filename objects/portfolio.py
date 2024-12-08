@@ -1,5 +1,5 @@
-from pairposition import PairPosition
-from signalprocessor import SignalProcessor
+from objects.pairposition import PairPosition
+from objects.signalprocessor import SignalProcessor
 
 class Portfolio:
     '''
@@ -62,7 +62,7 @@ class Portfolio:
         return getattr(self, name, None)
     
     def get_active_strategy_ids(self):
-        return [open_position.get('_strategy_id') for open_position in self.get_open_positions()]
+        return [open_position.get_strategy_id() for open_position in self.get_open_positions()]
 
     def get_open_positions(self):
         return self._open_positions
@@ -77,42 +77,63 @@ class Portfolio:
         self._closed_positions.append(position)
     def remove_closed_position(self, position):
         self._closed_positions.remove(position)
+
+
+    def enter_overval_position(self, data_row, strategy):
+        self.append_open_position(PairPosition(
+            id=1,
+            type='overval',
+            strategy_id=strategy.get_id(),
+            long_ticker=strategy.get_ticker2(),
+            short_ticker=strategy.get_ticker1(),
+            long_ticker_wt=0.5,
+            short_ticker_wt=0.5,
+            entry_date=data_row['date'],
+            long_entry_price=data_row[f'{strategy.get_ticker2()}'],
+            short_entry_price=data_row[f'{strategy.get_ticker1()}']
+        ))
+
+    def enter_underval_position(self, data_row, strategy):
+        pass
+
+    def exit_position(self, data_row, strategy, position):
+        pass
     
-    def exit_position(self, data_row, position, strategy):
-        date = data_row['date']
+    # def exit_position(self, data_row, position, strategy):
+    #     date = data_row['date']
 
-        if SignalProcessor.stoploss_hit(data_row, position):
-            exit_price = ExecutionLayer.get_stoploss_fill_price(data_row, position)
-        elif SignalProcessor.target_hit(data_row, position):
-            exit_price = ExecutionLayer.get_target_fill_price(data_row, position)
-        elif SignalProcessor.exit_condition_hit(data_row, position, strategy):
-            exit_price = ExecutionLayer.get_exit_condition_fill_price(data_row, position, strategy)
-        # Update exit information
-        position.set_exit_date(date)
-        position.set_exit_price(exit_price)
-        # Update position data w.r.t. exit price
-        PositionManager.update_closed_position_pnl(exit_price, position)
-        # Update position status
-        position.set_is_position_active(is_active=False)
-        # Remove from open positions
-        self.remove_open_position(position)
-        # Append to closed positions
-        self.append_closed_position(position)
+    #     if SignalProcessor.stoploss_hit(data_row, position):
+    #         exit_price = ExecutionLayer.get_stoploss_fill_price(data_row, position)
+    #     elif SignalProcessor.target_hit(data_row, position):
+    #         exit_price = ExecutionLayer.get_target_fill_price(data_row, position)
+    #     elif SignalProcessor.exit_condition_hit(data_row, position, strategy):
+    #         exit_price = ExecutionLayer.get_exit_condition_fill_price(data_row, position, strategy)
+    #     # Update exit information
+    #     position.set_exit_date(date)
+    #     position.set_exit_price(exit_price)
+    #     # Update position data w.r.t. exit price
+    #     PositionManager.update_closed_position_pnl(exit_price, position)
+    #     # Update position status
+    #     position.set_is_position_active(is_active=False)
+    #     # Remove from open positions
+    #     self.remove_open_position(position)
+    #     # Append to closed positions
+    #     self.append_closed_position(position)
     
-    def enter_position(self, data_row, strategy):
-        entry_date = data_row['date']
-        entry_price = ExecutionLayer.get_entry_fill_price(data_row, strategy)
+    # def enter_position(self, data_row, strategy):
+    #     entry_date = data_row['date']
+    #     entry_price = ExecutionLayer.get_entry_fill_price(data_row, strategy)
 
-        capital_allocation_perc = strategy.get('_capital_allocation_perc')
-        capital_allocated = self._total_capital_allocated * capital_allocation_perc
+    #     capital_allocation_perc = strategy.get('_capital_allocation_perc')
+    #     capital_allocated = self._total_capital_allocated * capital_allocation_perc
 
-        new_position = PairPosition(
+    #     new_position = PairPosition(
 
-        )
+    #     )
 
-        PositionManager.set_exit_prices(data_row, new_position, strategy)
+    #     PositionManager.set_exit_prices(data_row, new_position, strategy)
 
-        self.append_open_position(new_position)
-        self._total_positions += 1
+    #     self.append_open_position(new_position)
+    #     self._total_positions += 1
 
-        return new_position
+    #     return new_position

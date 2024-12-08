@@ -1,9 +1,26 @@
 class SignalProcessor:
     
     @staticmethod
-    def entry_signal(data_row, strategy):
-        entry_conditions = strategy.get_entry_conditions()
-        return all([condition(data_row) for condition in entry_conditions])
+    def overval_entry_signal(data_row, strategy):
+        overval_entry_condition_z_value = abs(strategy.get_entry_condition_z_value())
+        strategy_id = strategy.get_id()
+        return (data_row[f'{strategy_id}_residual'] > overval_entry_condition_z_value) and \
+                (data_row[f'{strategy_id}_prev_residual'] < overval_entry_condition_z_value)
+    
+    @staticmethod
+    def overval_exit_signal(data_row, strategy):
+        pass
+
+    @staticmethod
+    def underval_entry_signal(data_row, strategy):
+        underval_entry_condition_z_value = -1 * abs(strategy.get_entry_condition_z_value())
+        strategy_id = strategy.get_id()
+        return (data_row[f'{strategy_id}_residual'] < underval_entry_condition_z_value) and \
+                (data_row[f'{strategy_id}_prev_residual'] > underval_entry_condition_z_value)
+
+    @staticmethod
+    def underval_exit_signal(data_row, strategy):
+        pass
     
     @staticmethod
     def exit_signal(data_row, position, strategy):
