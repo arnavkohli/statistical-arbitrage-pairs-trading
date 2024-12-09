@@ -35,9 +35,18 @@ class PairPosition:
         self._long_exit_price = None
         self._short_exit_price = None
 
+        self._long_net_perc = 0
+        self._short_net_perc = 0
+
+        self._long_net_abs = 0
+        self._short_net_abs = 0
+
         self._abs_net = 0
         self._net_perc = 0
     
+    def get_id(self):
+        return getattr(self, '_id')
+
     def get_strategy_id(self):
         return getattr(self, '_strategy_id')
     
@@ -75,12 +84,32 @@ class PairPosition:
     def get_short_exit_price(self):
         return getattr(self, '_short_exit_price')
     def set_short_exit_price(self, short_exit_price):
-        return setattr(self, '_long_exit_price', short_exit_price)
+        return setattr(self, '_short_exit_price', short_exit_price)
+    
+    def get_long_net_abs(self):
+        return getattr(self, '_long_net_abs')
+    def set_long_net_abs(self, long_net_abs):
+        return setattr(self, '_long_net_abs', long_net_abs)
+    
+    def get_short_net_abs(self):
+        return getattr(self, '_short_net_abs')
+    def set_short_net_abs(self, short_net_abs):
+        return setattr(self, '_short_net_abs', short_net_abs)
     
     def get_abs_net(self):
         return getattr(self, '_abs_net')
     def set_abs_net(self, abs_net):
         return setattr(self, '_abs_net', abs_net)
+
+    def get_long_net_perc(self):
+        return getattr(self, '_long_net_perc')
+    def set_long_net_perc(self, long_net_perc):
+        return setattr(self, '_long_net_perc', long_net_perc)
+    
+    def get_short_net_perc(self):
+        return getattr(self, '_short_net_perc')
+    def set_short_net_perc(self, short_net_perc):
+        return setattr(self, '_short_net_perc', short_net_perc)
 
     def get_net_perc(self):
         return getattr(self, '_net_perc')
@@ -101,6 +130,52 @@ class PairPosition:
         short_perc = self.compute_short_perc(current_short_price)
         short_wt = self.get_short_ticker_wt()
         return long_perc*long_wt + short_perc*short_wt
+    
+    def compute_and_set_nets(self, current_long_price, current_short_price):
+        self.compute_and_set_long_nets(current_long_price)
+        self.compute_and_set_short_nets(current_short_price)
+
+        self.set_abs_net(self.get_long_net_abs() + self.get_short_net_abs())
+        self.set_net_perc(
+            self.get_long_net_perc()*self.get_long_ticker_wt() + \
+            self.get_short_net_perc()*self.get_short_ticker_wt()
+        )
+    
+    def compute_and_set_long_nets(self, current_long_price):
+        long_net_abs = current_long_price - self.get_long_entry_price()
+        long_net_perc = long_net_abs / self.get_long_entry_price()
+        self.set_long_net_abs(long_net_abs)
+        self.set_long_net_perc(long_net_perc)
+    
+    def compute_and_set_short_nets(self, current_short_price):
+        short_net_abs = self.get_short_entry_price() - current_short_price
+        short_net_perc = short_net_abs / self.get_short_entry_price()
+        self.set_short_net_abs(short_net_abs)
+        self.set_short_net_perc(short_net_perc)
+
+    def info(self):
+        return {
+            'id': self.get_id(),
+            'type': self.get_type(),
+            'strategy_id': self.get_strategy_id(),
+            'long_ticker': self.get_long_ticker(),
+            'short_ticker': self.get_short_ticker(),
+            'long_ticker_wt': self.get_long_ticker_wt(),
+            'short_ticker_wt': self.get_short_ticker_wt(),
+            'entry_date': self.get_entry_date(),
+            'exit_date': self.get_exit_date(),
+            'long_entry_price': self.get_long_entry_price(),
+            'long_exit_price': self.get_long_exit_price(),
+            'long_net_abs': self.get_long_net_abs(),
+            'long_net_perc': self.get_long_net_perc(),
+            'short_entry_price': self.get_short_entry_price(),
+            'short_exit_price': self.get_short_exit_price(),
+            'short_net_abs': self.get_short_net_abs(),
+            'short_net_perc': self.get_short_net_perc(),
+            'net_perc': self.get_net_perc(),
+            'net_abs': self.get_abs_net()
+
+        }
     
         
 

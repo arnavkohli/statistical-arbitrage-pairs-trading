@@ -20,7 +20,6 @@ class DataProcessor:
         test_residuals_z = (test_residuals - pair_regression_model.resid.mean()) / pair_regression_model.resid.std()
         test_residuals_z.name = f'{pair_tickers[0]}{pair_tickers[1]}_residual'
 
-        print (test_residuals_z)
 
         processed_data = pd.merge(
             left=pair_closing_prices,

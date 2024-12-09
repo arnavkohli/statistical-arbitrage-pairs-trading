@@ -84,20 +84,45 @@ class Portfolio:
             id=1,
             type='overval',
             strategy_id=strategy.get_id(),
+            long_ticker=strategy.get_ticker1(),
+            short_ticker=strategy.get_ticker2(),
+            long_ticker_wt=strategy.get_ticker1_wt(),
+            short_ticker_wt=strategy.get_ticker2_wt(),
+            entry_date=data_row['date'],
+            long_entry_price=data_row[f'{strategy.get_ticker1()}'],
+            short_entry_price=data_row[f'{strategy.get_ticker2()}']
+        ))
+
+    def enter_underval_position(self, data_row, strategy):
+        self.append_open_position(PairPosition(
+            id=1,
+            type='underval',
+            strategy_id=strategy.get_id(),
             long_ticker=strategy.get_ticker2(),
             short_ticker=strategy.get_ticker1(),
-            long_ticker_wt=0.5,
-            short_ticker_wt=0.5,
+            long_ticker_wt=strategy.get_ticker2_wt(),
+            short_ticker_wt=strategy.get_ticker1_wt(),
             entry_date=data_row['date'],
             long_entry_price=data_row[f'{strategy.get_ticker2()}'],
             short_entry_price=data_row[f'{strategy.get_ticker1()}']
         ))
 
-    def enter_underval_position(self, data_row, strategy):
-        pass
+    def exit_position(self, data_row, position):
+        self.remove_open_position(position)
 
-    def exit_position(self, data_row, strategy, position):
-        pass
+        long_ticker = position.get_long_ticker()
+        short_ticker = position.get_short_ticker()
+
+        long_exit_price = data_row[long_ticker]
+        short_exit_price = data_row[short_ticker]
+
+        position.set_exit_date(data_row['date'])
+        position.set_long_exit_price(long_exit_price)
+        position.set_short_exit_price(short_exit_price)
+
+        # position.compute_and_set_nets(long_exit_price, short_exit_price)
+
+        self.append_closed_position(position)
     
     # def exit_position(self, data_row, position, strategy):
     #     date = data_row['date']

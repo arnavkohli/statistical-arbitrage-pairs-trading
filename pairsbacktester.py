@@ -22,6 +22,9 @@ class PairsBacktester:
     def get_open_positions(self):
         return getattr(self, '_portfolio').get_open_positions()
     
+    def get_closed_positions(self):
+        return getattr(self, '_portfolio').get_closed_positions()
+    
     def get_active_strategies(self):
         return getattr(self, '_portfolio').get_active_strategy_ids()
     
@@ -39,15 +42,14 @@ class PairsBacktester:
             # Lookup strategy object using strategy_id from position
             pair_strategy = self.find_pair_strategy_by_id(position.get_strategy_id())
             pair_position_type = position.get_type()
-
             if pair_position_type == 'underval':
-                if SignalProcessor.underval_exit_signal(data_row, pair_strategy):
-                    print ('exiting underval')
-                    self.get_portfolio().exit_position()
+                if SignalProcessor.underval_exit_signal(data_row, position, pair_strategy):
+                    self.get_portfolio().exit_position(data_row, position)
+
             elif pair_position_type == 'overval':
-                if SignalProcessor.overval_exit_signal(data_row, pair_strategy):
-                    print ('exiting overval')
-                    self.get_portfolio().exit_position()
+                if SignalProcessor.overval_exit_signal(data_row, position, pair_strategy):
+                    self.get_portfolio().exit_position(data_row, position)
+        
 
     def check_for_entry_signals(self, data_row):
         # Filter out stratgies which are already running
@@ -60,11 +62,14 @@ class PairsBacktester:
             elif SignalProcessor.underval_entry_signal(data_row, inactive_strategy):
                 self.get_portfolio().enter_underval_position(data_row, inactive_strategy)
 
-    # def update_open_positions(self, data_row):
-    #     for position in self.get_portfolio().get_open_positions():
-    #         strategy = self.find_strategy_by_id(position.get('_strategy_id'))
-    #         PositionManager.update_open_position_pnl(data_row, position)
-    #         PositionManager.update_trailing_stoploss(data_row, position, strategy)
+    def update_open_positions(self, data_row):
+        for position in self.get_portfolio().get_open_positions():
+            long_ticker = position.get_long_ticker()
+            short_ticker = position.get_short_ticker()
+            position.compute_and_set_nets(
+                data_row[long_ticker],
+                data_row[short_ticker]
+            )
 
     # def log_open_positions(self, date):
     #     new_notional_abs_net = 0
@@ -94,6 +99,7 @@ class PairsBacktester:
         for date, data_row in self._data_feed.iterrows():
             
             ## Update current positions
+            self.update_open_positions(data_row)
 
             self.check_for_exit_signals(data_row)
 

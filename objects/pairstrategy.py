@@ -4,6 +4,8 @@ class PairStrategy:
         id,
         ticker1,
         ticker2,
+        ticker1_wt,
+        ticker2_wt,
         entry_condition_z_value,
         target_condition_z_value,
         stoploss_condition_z_value,
@@ -15,8 +17,8 @@ class PairStrategy:
         self._ticker1 = ticker1
         self._ticker2 = ticker2
 
-        # self._entry_conditions = entry_conditions
-        # self._exit_conditions = exit_conditions
+        self._ticker1_wt = ticker1_wt
+        self._ticker2_wt = ticker2_wt
 
         self._entry_condition_z_value = entry_condition_z_value
         self._target_condition_z_value = target_condition_z_value
@@ -25,10 +27,6 @@ class PairStrategy:
         self._target_perc = target_perc
         self._stoploss_perc = stoploss_perc
     
-    # def get_entry_conditions(self):
-    #     return getattr(self, '_entry_conditions')
-    # def get_exit_conditions(self):
-    #     return getattr(self, '_exit_conditions')
     def get_id(self):
         return getattr(self, '_id')
 
@@ -36,6 +34,11 @@ class PairStrategy:
         return getattr(self, '_ticker1')
     def get_ticker2(self):
         return getattr(self, '_ticker2')
+
+    def get_ticker1_wt(self):
+        return getattr(self, '_ticker1_wt')
+    def get_ticker2_wt(self):
+        return getattr(self, '_ticker2_wt')
 
     def get_entry_condition_z_value(self):
         return getattr(self, '_entry_condition_z_value')
