@@ -71,29 +71,29 @@ class PairsBacktester:
                 data_row[short_ticker]
             )
 
-    # def log_open_positions(self, date):
-    #     new_notional_abs_net = 0
-    #     new_notional_net_perc = 0
-    #     for position in self.get_portfolio().get_open_positions():
-    #         summary = position.get_position_summary()
-    #         summary['date'] = date
-    #         self._daily_performance.append(summary)
+    def log_open_positions(self, date):
+        new_notional_abs_net = 0
+        new_notional_net_perc = 0
+        for position in self.get_portfolio().get_open_positions():
+            summary = position.info()
+            summary['date'] = date
+            # self._daily_performance.append(summary)
 
-    #         new_notional_abs_net += position.get_abs_net()
-    #         # new_notional_net_perc += position.get_net_perc() * position.get('_capital_allocated_as_a_perc_of_total_capital')
+            new_notional_abs_net += position.get_abs_net()
+            new_notional_net_perc += position.get_abs_net() / self.get_portfolio().get_capital_investment()
         
-    #     self.get_portfolio().set_notional_abs_net(date, new_notional_abs_net)
-    #     self.get_portfolio().set_notional_net_perc(date, new_notional_net_perc)
+        self.get_portfolio().set_notional_abs_net(date, new_notional_abs_net)
+        self.get_portfolio().set_notional_net_perc(date, new_notional_net_perc)
 
-    # def log_closed_positions(self, date):
-    #     for position in self.get_portfolio().get_closed_positions():
-    #         if position.get_exit_date() == date:
-    #             summary = position.get_position_summary()
-    #             summary['date'] = date
-    #             self._daily_performance.append(summary)
+    def log_closed_positions(self, date):
+        for position in self.get_portfolio().get_closed_positions():
+            if position.get_exit_date() == date:
+                summary = position.info()
+                summary['date'] = date
+                # self._daily_performance.append(summary)
 
-    #             self.get_portfolio().add_total_abs_net(date, position.get_abs_net())
-    #             # self.get_portfolio().add_total_net_perc(date, position.get('_net_perc') * position.get('_capital_allocated_as_a_perc_of_total_capital') )
+                self.get_portfolio().add_total_abs_net(date, position.get_abs_net())
+                self.get_portfolio().add_total_net_perc(date, position.get_abs_net() / self.get_portfolio().get_capital_investment() )
     
     def trade(self):
         for date, data_row in self._data_feed.iterrows():
@@ -108,8 +108,8 @@ class PairsBacktester:
             # # Update open_positions
             # self.update_open_positions(data_row)
 
-            # self.log_open_positions(date)
-            # self.log_closed_positions(date)
+            self.log_open_positions(date)
+            self.log_closed_positions(date)
         
 
 
