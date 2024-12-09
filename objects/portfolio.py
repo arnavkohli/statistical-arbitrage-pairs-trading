@@ -26,6 +26,7 @@ class Portfolio:
         self._closed_positions = []
 
         self._total_capital = total_capital_allocated
+        self._capital_investment = total_capital_allocated
 
         self._current_date = None
     
@@ -81,6 +82,8 @@ class Portfolio:
     
     def get_total_capital(self):
         return getattr(self, '_total_capital')
+    def get_capital_investment(self):
+        return getattr(self, '_capital_investment')
     
     def deduct_from_total_capital(self, deduction):
         current_capital = self.get_total_capital()
