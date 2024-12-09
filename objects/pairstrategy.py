@@ -10,7 +10,8 @@ class PairStrategy:
         target_condition_z_value,
         stoploss_condition_z_value,
         target_perc,
-        stoploss_perc):
+        stoploss_perc,
+        capital_allocated):
 
         self._id = id
 
@@ -26,6 +27,8 @@ class PairStrategy:
 
         self._target_perc = target_perc
         self._stoploss_perc = stoploss_perc
+
+        self._capital_allocated = capital_allocated
     
     def get_id(self):
         return getattr(self, '_id')
@@ -51,4 +54,7 @@ class PairStrategy:
         return getattr(self, '_target_perc')
     def get_stoploss_perc(self):
         return getattr(self, '_stoploss_perc')
+    
+    def get_capital_allocated(self):
+        return getattr(self, '_capital_allocated')
     

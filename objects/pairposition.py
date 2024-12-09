@@ -10,8 +10,8 @@ class PairPosition:
         short_ticker_wt,
         entry_date,
         long_entry_price,
-        short_entry_price):
-        # capital_allocated_as_a_perc_of_total_capital
+        short_entry_price,
+        capital_allocated):
 
         self._id = id
         self._type = type
@@ -28,7 +28,7 @@ class PairPosition:
         self._long_entry_price = long_entry_price
         self._short_entry_price = short_entry_price
 
-        # self._capital_allocated_as_a_perc_of_total_capital = capital_allocated_as_a_perc_of_total_capital
+        self._capital_allocated = capital_allocated
 
         self._exit_date = None
 
@@ -116,6 +116,9 @@ class PairPosition:
     def set_net_perc(self, net_perc):
         return setattr(self, '_net_perc', net_perc)
     
+    def get_capital_allocated(self):
+        return getattr(self, '_capital_allocated')
+    
     def compute_long_perc(self, current_long_price):
         entry_price = self.get_long_entry_price()
         return (current_long_price - entry_price) / entry_price
@@ -142,14 +145,20 @@ class PairPosition:
         )
     
     def compute_and_set_long_nets(self, current_long_price):
-        long_net_abs = current_long_price - self.get_long_entry_price()
-        long_net_perc = long_net_abs / self.get_long_entry_price()
+        long_profit = current_long_price - self.get_long_entry_price()
+        long_net_perc = long_profit / self.get_long_entry_price()
+
+        long_net_abs = long_net_perc * self.get_capital_allocated() * self.get_long_ticker_wt()
+
         self.set_long_net_abs(long_net_abs)
         self.set_long_net_perc(long_net_perc)
     
     def compute_and_set_short_nets(self, current_short_price):
-        short_net_abs = self.get_short_entry_price() - current_short_price
-        short_net_perc = short_net_abs / self.get_short_entry_price()
+        short_profit = self.get_short_entry_price() - current_short_price
+        short_net_perc = short_profit / self.get_short_entry_price()
+
+        short_net_abs = short_net_perc * self.get_capital_allocated() * self.get_short_ticker_wt()
+
         self.set_short_net_abs(short_net_abs)
         self.set_short_net_perc(short_net_perc)
 
