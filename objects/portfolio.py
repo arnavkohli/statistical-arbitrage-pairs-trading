@@ -25,7 +25,7 @@ class Portfolio:
         self._open_positions = []
         self._closed_positions = []
 
-        self._total_capital_allocated = total_capital_allocated
+        self._total_capital = total_capital_allocated
 
         self._current_date = None
     
@@ -78,8 +78,26 @@ class Portfolio:
     def remove_closed_position(self, position):
         self._closed_positions.remove(position)
 
+    
+    def get_total_capital(self):
+        return getattr(self, '_total_capital')
+    
+    def deduct_from_total_capital(self, deduction):
+        current_capital = self.get_total_capital()
+        print (f'- {deduction}; current: {current_capital - deduction}')
+        return setattr(self, '_total_capital', current_capital - deduction)
+    
+    def add_to_total_capital(self, addition):
+        current_capital = self.get_total_capital()
+        print (f'+ {addition}; current: {current_capital + addition}')
+        return setattr(self, '_total_capital', current_capital + addition)
+
 
     def enter_overval_position(self, data_row, strategy):
+        capital_required = strategy.get_capital_allocated()
+        if self.get_total_capital() < capital_required:
+            return 
+        
         self.append_open_position(PairPosition(
             id=1,
             type='overval',
@@ -90,10 +108,16 @@ class Portfolio:
             short_ticker_wt=strategy.get_ticker2_wt(),
             entry_date=data_row['date'],
             long_entry_price=data_row[f'{strategy.get_ticker1()}'],
-            short_entry_price=data_row[f'{strategy.get_ticker2()}']
+            short_entry_price=data_row[f'{strategy.get_ticker2()}'],
+            capital_allocated=strategy.get_capital_allocated()
         ))
+        self.deduct_from_total_capital(strategy.get_capital_allocated())
 
     def enter_underval_position(self, data_row, strategy):
+        capital_required = strategy.get_capital_allocated()
+        if self.get_total_capital() < capital_required:
+            return 
+        
         self.append_open_position(PairPosition(
             id=1,
             type='underval',
@@ -104,8 +128,10 @@ class Portfolio:
             short_ticker_wt=strategy.get_ticker1_wt(),
             entry_date=data_row['date'],
             long_entry_price=data_row[f'{strategy.get_ticker2()}'],
-            short_entry_price=data_row[f'{strategy.get_ticker1()}']
+            short_entry_price=data_row[f'{strategy.get_ticker1()}'],
+            capital_allocated=strategy.get_capital_allocated()
         ))
+        self.deduct_from_total_capital(strategy.get_capital_allocated())
 
     def exit_position(self, data_row, position):
         self.remove_open_position(position)
@@ -119,6 +145,8 @@ class Portfolio:
         position.set_exit_date(data_row['date'])
         position.set_long_exit_price(long_exit_price)
         position.set_short_exit_price(short_exit_price)
+
+        self.add_to_total_capital((1 + position.get_net_perc()) * position.get_capital_allocated())
 
         # position.compute_and_set_nets(long_exit_price, short_exit_price)
 
