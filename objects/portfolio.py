@@ -1,5 +1,4 @@
 from objects.pairposition import PairPosition
-from objects.signalprocessor import SignalProcessor
 
 class Portfolio:
     '''
@@ -151,45 +150,4 @@ class Portfolio:
 
         self.add_to_total_capital((1 + position.get_net_perc()) * position.get_capital_allocated())
 
-        # position.compute_and_set_nets(long_exit_price, short_exit_price)
-
         self.append_closed_position(position)
-    
-    # def exit_position(self, data_row, position, strategy):
-    #     date = data_row['date']
-
-    #     if SignalProcessor.stoploss_hit(data_row, position):
-    #         exit_price = ExecutionLayer.get_stoploss_fill_price(data_row, position)
-    #     elif SignalProcessor.target_hit(data_row, position):
-    #         exit_price = ExecutionLayer.get_target_fill_price(data_row, position)
-    #     elif SignalProcessor.exit_condition_hit(data_row, position, strategy):
-    #         exit_price = ExecutionLayer.get_exit_condition_fill_price(data_row, position, strategy)
-    #     # Update exit information
-    #     position.set_exit_date(date)
-    #     position.set_exit_price(exit_price)
-    #     # Update position data w.r.t. exit price
-    #     PositionManager.update_closed_position_pnl(exit_price, position)
-    #     # Update position status
-    #     position.set_is_position_active(is_active=False)
-    #     # Remove from open positions
-    #     self.remove_open_position(position)
-    #     # Append to closed positions
-    #     self.append_closed_position(position)
-    
-    # def enter_position(self, data_row, strategy):
-    #     entry_date = data_row['date']
-    #     entry_price = ExecutionLayer.get_entry_fill_price(data_row, strategy)
-
-    #     capital_allocation_perc = strategy.get('_capital_allocation_perc')
-    #     capital_allocated = self._total_capital_allocated * capital_allocation_perc
-
-    #     new_position = PairPosition(
-
-    #     )
-
-    #     PositionManager.set_exit_prices(data_row, new_position, strategy)
-
-    #     self.append_open_position(new_position)
-    #     self._total_positions += 1
-
-    #     return new_position
