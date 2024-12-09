@@ -51,14 +51,6 @@ class SignalProcessor:
                 SignalProcessor.underval_target_signal(data_row, strategy) or \
                 SignalProcessor.stoploss_hit(data_row, position, strategy) or \
                 SignalProcessor.target_hit(data_row, position, strategy) 
-    
-    # @staticmethod
-    # def exit_signal(data_row, position, strategy):
-    #     return (
-    #         SignalProcessor.stoploss_hit(data_row, position, strategy) or \
-    #             SignalProcessor.target_hit(data_row, position, strategy) or \
-    #                 SignalProcessor.exit_condition_hit(data_row, strategy)
-    #         )
 
     @staticmethod
     def stoploss_hit(data_row, position, strategy):
@@ -71,8 +63,6 @@ class SignalProcessor:
             current_long_price=current_long_price,
             current_short_price=current_short_price
         )
-        if position_net_per <= strategy.get_stoploss_perc():
-            print ('stop hit')
         return position_net_per <= strategy.get_stoploss_perc()
     
     @staticmethod
@@ -86,11 +76,4 @@ class SignalProcessor:
             current_long_price=current_long_price,
             current_short_price=current_short_price
         )
-        if position_net_per >= strategy.get_target_perc():
-            print ('target hit')
         return position_net_per >= strategy.get_target_perc()
-
-    @staticmethod
-    def exit_condition_hit(data_row, strategy):
-        exit_conditions = strategy.get_exit_conditions()
-        return all([condition(data_row) for condition in exit_conditions])
