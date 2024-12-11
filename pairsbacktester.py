@@ -3,6 +3,7 @@ import statsmodels.api as sm
 
 from objects.signalprocessor import SignalProcessor
 from objects.positionmanager import PositionManager
+from objects.portfoliomanager import PortfolioManager
 
 class PairsBacktester:
     def __init__(
@@ -42,13 +43,14 @@ class PairsBacktester:
             # Lookup strategy object using strategy_id from position
             pair_strategy = self.find_pair_strategy_by_id(position.get_strategy_id())
             pair_position_type = position.get_type()
-            if pair_position_type == 'underval':
-                if SignalProcessor.underval_exit_signal(data_row, position, pair_strategy):
-                    self.get_portfolio().exit_position(data_row, position)
+            if (pair_position_type == 'underval' and SignalProcessor.underval_exit_signal(data_row, position, pair_strategy)) or \
+                (pair_position_type == 'overval' and SignalProcessor.overval_exit_signal(data_row, position, pair_strategy)):
+                    PortfolioManager.exit_pair_position(
+                        portfolio=self.get_portfolio(),
+                        position=position,
+                        data_row=data_row
+                    )
 
-            elif pair_position_type == 'overval':
-                if SignalProcessor.overval_exit_signal(data_row, position, pair_strategy):
-                    self.get_portfolio().exit_position(data_row, position)
         
 
     def check_for_entry_signals(self, data_row):
@@ -58,9 +60,20 @@ class PairsBacktester:
         
         for inactive_strategy in inactive_strategies:
             if SignalProcessor.overval_entry_signal(data_row, inactive_strategy):
-                self.get_portfolio().enter_overval_position(data_row, inactive_strategy)
+                PortfolioManager.enter_pair_position(
+                    portfolio=self.get_portfolio(),
+                    strategy=inactive_strategy,
+                    data_row=data_row,
+                    pair_position_type='overval'
+                )
+
             elif SignalProcessor.underval_entry_signal(data_row, inactive_strategy):
-                self.get_portfolio().enter_underval_position(data_row, inactive_strategy)
+                PortfolioManager.enter_pair_position(
+                    portfolio=self.get_portfolio(),
+                    strategy=inactive_strategy,
+                    data_row=data_row,
+                    pair_position_type='underval'
+                )
 
     def update_open_positions(self, data_row):
         for position in self.get_portfolio().get_open_positions():
@@ -72,7 +85,6 @@ class PairsBacktester:
         for position in self.get_portfolio().get_open_positions():
             summary = position.info()
             summary['date'] = date
-            # self._daily_performance.append(summary)
 
             new_notional_abs_net += position.get_abs_net()
             new_notional_net_perc += position.get_abs_net() / self.get_portfolio().get_capital_investment()
@@ -85,7 +97,6 @@ class PairsBacktester:
             if position.get_exit_date() == date:
                 summary = position.info()
                 summary['date'] = date
-                # self._daily_performance.append(summary)
 
                 self.get_portfolio().add_total_abs_net(date, position.get_abs_net())
                 self.get_portfolio().add_total_net_perc(date, position.get_abs_net() / self.get_portfolio().get_capital_investment() )
