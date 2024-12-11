@@ -2,7 +2,7 @@ import pandas as pd
 import statsmodels.api as sm
 
 from objects.signalprocessor import SignalProcessor
-
+from objects.positionmanager import PositionManager
 
 class PairsBacktester:
     def __init__(
@@ -64,12 +64,7 @@ class PairsBacktester:
 
     def update_open_positions(self, data_row):
         for position in self.get_portfolio().get_open_positions():
-            long_ticker = position.get_long_ticker()
-            short_ticker = position.get_short_ticker()
-            position.compute_and_set_nets(
-                data_row[long_ticker],
-                data_row[short_ticker]
-            )
+            PositionManager.update_position_pnl(data_row, position)
 
     def log_open_positions(self, date):
         new_notional_abs_net = 0
@@ -106,7 +101,6 @@ class PairsBacktester:
             self.check_for_entry_signals(data_row)
 
             # # Update open_positions
-            # self.update_open_positions(data_row)
 
             self.log_open_positions(date)
             self.log_closed_positions(date)

@@ -118,49 +118,6 @@ class PairPosition:
     
     def get_capital_allocated(self):
         return getattr(self, '_capital_allocated')
-    
-    def compute_long_perc(self, current_long_price):
-        entry_price = self.get_long_entry_price()
-        return (current_long_price - entry_price) / entry_price
-    
-    def compute_short_perc(self, current_short_price):
-        entry_price = self.get_short_entry_price()
-        return (entry_price - current_short_price) / entry_price
-    
-    def compute_net_perc(self, current_long_price, current_short_price):
-        long_perc = self.compute_long_perc(current_long_price)
-        long_wt = self.get_long_ticker_wt()
-        short_perc = self.compute_short_perc(current_short_price)
-        short_wt = self.get_short_ticker_wt()
-        return long_perc*long_wt + short_perc*short_wt
-    
-    def compute_and_set_nets(self, current_long_price, current_short_price):
-        self.compute_and_set_long_nets(current_long_price)
-        self.compute_and_set_short_nets(current_short_price)
-
-        self.set_abs_net(self.get_long_net_abs() + self.get_short_net_abs())
-        self.set_net_perc(
-            self.get_long_net_perc()*self.get_long_ticker_wt() + \
-            self.get_short_net_perc()*self.get_short_ticker_wt()
-        )
-    
-    def compute_and_set_long_nets(self, current_long_price):
-        long_profit = current_long_price - self.get_long_entry_price()
-        long_net_perc = long_profit / self.get_long_entry_price()
-
-        long_net_abs = long_net_perc * self.get_capital_allocated() * self.get_long_ticker_wt()
-
-        self.set_long_net_abs(long_net_abs)
-        self.set_long_net_perc(long_net_perc)
-    
-    def compute_and_set_short_nets(self, current_short_price):
-        short_profit = self.get_short_entry_price() - current_short_price
-        short_net_perc = short_profit / self.get_short_entry_price()
-
-        short_net_abs = short_net_perc * self.get_capital_allocated() * self.get_short_ticker_wt()
-
-        self.set_short_net_abs(short_net_abs)
-        self.set_short_net_perc(short_net_perc)
 
     def info(self):
         return {

@@ -23,8 +23,8 @@ class SignalProcessor:
     def overval_exit_signal(data_row, position, strategy):
         return SignalProcessor.overval_stoploss_signal(data_row, strategy) or \
                 SignalProcessor.overval_target_signal(data_row, strategy) or \
-                SignalProcessor.stoploss_hit(data_row, position, strategy) or \
-                SignalProcessor.target_hit(data_row, position, strategy) 
+                SignalProcessor.stoploss_hit(position, strategy) or \
+                SignalProcessor.target_hit(position, strategy) 
 
     @staticmethod
     def underval_entry_signal(data_row, strategy):
@@ -49,31 +49,13 @@ class SignalProcessor:
     def underval_exit_signal(data_row, position, strategy):
         return SignalProcessor.underval_stoploss_signal(data_row, strategy) or \
                 SignalProcessor.underval_target_signal(data_row, strategy) or \
-                SignalProcessor.stoploss_hit(data_row, position, strategy) or \
-                SignalProcessor.target_hit(data_row, position, strategy) 
+                SignalProcessor.stoploss_hit(position, strategy) or \
+                SignalProcessor.target_hit(position, strategy) 
 
     @staticmethod
-    def stoploss_hit(data_row, position, strategy):
-        long_ticker = position.get_long_ticker()
-        short_ticker = position.get_short_ticker()
-        current_long_price = data_row[long_ticker]
-        current_short_price = data_row[short_ticker]
-
-        position_net_per = position.compute_net_perc(
-            current_long_price=current_long_price,
-            current_short_price=current_short_price
-        )
-        return position_net_per <= strategy.get_stoploss_perc()
+    def stoploss_hit(position, strategy):
+        return position.get_net_perc() <= strategy.get_stoploss_perc()
     
     @staticmethod
-    def target_hit(data_row, position, strategy):
-        long_ticker = position.get_long_ticker()
-        short_ticker = position.get_short_ticker()
-        current_long_price = data_row[long_ticker]
-        current_short_price = data_row[short_ticker]
-
-        position_net_per = position.compute_net_perc(
-            current_long_price=current_long_price,
-            current_short_price=current_short_price
-        )
-        return position_net_per >= strategy.get_target_perc()
+    def target_hit(position, strategy):
+        return  position.get_net_perc() <= strategy.get_stoploss_perc()
