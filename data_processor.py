@@ -32,15 +32,6 @@ class DataProcessor:
 
         processed_data[f'{pair_tickers[0]}{pair_tickers[1]}_prev_residual'] = processed_data[f'{pair_tickers[0]}{pair_tickers[1]}_residual'].shift(1)
 
-        # processed_data['residual_mean'] = pair_regression_model.resid.mean()
-        # processed_data['residual_std'] = pair_regression_model.resid.std()
-
-        # processed_data['res_overval_cutoff'] = pair_regression_model.resid.mean() + pair_regression_model.resid.std()
-        # processed_data['res_underval_cutoff'] = pair_regression_model.resid.mean() - pair_regression_model.resid.std()
-
-        # processed_data['res_overval_stoploss'] = pair_regression_model.resid.mean() + 2*pair_regression_model.resid.std()
-        # processed_data['res_underval_stoploss'] = pair_regression_model.resid.mean() - 2*pair_regression_model.resid.std()
-
         return processed_data
 
 

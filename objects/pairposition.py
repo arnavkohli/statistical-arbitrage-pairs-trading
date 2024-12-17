@@ -1,3 +1,5 @@
+from pandas import to_datetime
+
 class PairPosition:
     def __init__(
         self,
@@ -23,7 +25,7 @@ class PairPosition:
         self._long_ticker_wt = long_ticker_wt
         self._short_ticker_wt = short_ticker_wt
 
-        self._entry_date = entry_date
+        self._entry_date = to_datetime(entry_date)
 
         self._long_entry_price = long_entry_price
         self._short_entry_price = short_entry_price
@@ -31,6 +33,7 @@ class PairPosition:
         self._capital_allocated = capital_allocated
 
         self._exit_date = None
+        self._duration = None
 
         self._long_exit_price = None
         self._short_exit_price = None
@@ -74,7 +77,12 @@ class PairPosition:
     def get_exit_date(self):
         return getattr(self, '_exit_date')
     def set_exit_date(self, exit_date):
-        return setattr(self, '_exit_date', exit_date)
+        return setattr(self, '_exit_date', to_datetime(exit_date))
+    
+    def get_duration(self):
+        return getattr(self, '_duration')
+    def set_duration(self):
+        return setattr(self, '_duration', (self._exit_date - self._entry_date).days)
     
     def get_long_exit_price(self):
         return getattr(self, '_long_exit_price')
@@ -130,6 +138,7 @@ class PairPosition:
             'short_ticker_wt': self.get_short_ticker_wt(),
             'entry_date': self.get_entry_date(),
             'exit_date': self.get_exit_date(),
+            'duration': self.get_duration(),
             'long_entry_price': self.get_long_entry_price(),
             'long_exit_price': self.get_long_exit_price(),
             'long_net_abs': self.get_long_net_abs(),

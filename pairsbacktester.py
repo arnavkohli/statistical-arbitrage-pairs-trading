@@ -94,6 +94,8 @@ class PairsBacktester:
 
     def log_closed_positions(self, date):
         for position in self.get_portfolio().get_closed_positions():
+            # print (position.get_exit_date(), date)
+            # print (type(position.get_exit_date(), type(date)))
             if position.get_exit_date() == date:
                 summary = position.info()
                 summary['date'] = date

@@ -57,6 +57,7 @@ class PortfolioManager:
         position.set_exit_date(data_row['date'])
         position.set_long_exit_price(long_exit_price)
         position.set_short_exit_price(short_exit_price)
+        position.set_duration()
 
         portfolio.add_to_total_capital((1 + position.get_net_perc()) * position.get_capital_allocated())
 

@@ -58,4 +58,4 @@ class SignalProcessor:
     
     @staticmethod
     def target_hit(position, strategy):
-        return  position.get_net_perc() <= strategy.get_stoploss_perc()
+        return  position.get_net_perc() >= strategy.get_target_perc()
