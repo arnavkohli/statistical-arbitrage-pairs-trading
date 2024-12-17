@@ -1,4 +1,4 @@
-from objects.pairposition import PairPosition
+import pandas as pd
 
 class Portfolio:
     '''
@@ -29,7 +29,7 @@ class Portfolio:
 
         self._current_date = None
     
-    def get_portfolio_net_percs(self):
+    def get_portfolio_equity_curve(self):
         realised_net_percs = pd.DataFrame(self._total_net_percs).set_index('date')
         notional_net_percs = pd.DataFrame(self._notional_net_percs).set_index('date')
         merged = pd.merge(
@@ -39,8 +39,7 @@ class Portfolio:
             right_index=True,
             how='outer'
         ).ffill().fillna(0)
-        merged['total_net_perc'] = merged['net_perc'] + merged['notional_net_perc']
-        return merged
+        return merged['net_perc'] + merged['notional_net_perc'] + self._capital_investment
     
     def add_total_abs_net(self, date, abs_net):
         self._total_abs_net += abs_net
@@ -86,10 +85,10 @@ class Portfolio:
     
     def deduct_from_total_capital(self, deduction):
         current_capital = self.get_total_capital()
-        print (f'- {deduction}; current: {current_capital - deduction}')
+        print (f'POSITION OPENED: CAPITAL DEDUCTED: - {round(deduction, 2)}; CAPITAL AVAILABLE: {round(current_capital - deduction, 2)}')
         return setattr(self, '_total_capital', current_capital - deduction)
     
     def add_to_total_capital(self, addition):
         current_capital = self.get_total_capital()
-        print (f'+ {addition}; current: {current_capital + addition}')
+        print (f'POSITION CLOSED:    CAPITAL ADDED: + {round(addition, 2)}; CAPITAL AVAILABLE: {round(current_capital + addition, 2)}')
         return setattr(self, '_total_capital', current_capital + addition)
