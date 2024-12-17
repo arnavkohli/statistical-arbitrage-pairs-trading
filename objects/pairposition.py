@@ -25,7 +25,7 @@ class PairPosition:
         self._long_ticker_wt = long_ticker_wt
         self._short_ticker_wt = short_ticker_wt
 
-        self._entry_date = to_datetime(entry_date)
+        self._entry_date = to_datetime(entry_date).date()
 
         self._long_entry_price = long_entry_price
         self._short_entry_price = short_entry_price
@@ -77,7 +77,7 @@ class PairPosition:
     def get_exit_date(self):
         return getattr(self, '_exit_date')
     def set_exit_date(self, exit_date):
-        return setattr(self, '_exit_date', to_datetime(exit_date))
+        return setattr(self, '_exit_date', to_datetime(exit_date).date())
     
     def get_duration(self):
         return getattr(self, '_duration')

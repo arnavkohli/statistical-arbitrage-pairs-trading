@@ -23,6 +23,8 @@ I utilize the **Augmented Dickey-Fuller (ADF)** test to test the null hypothesis
   - Strategy: Invest 2 (20% of initial portoflio capital) in a pair strategy if the pair's residual breaches the Z-score of 1
     - Target: Either +10% profit or residual returns to its mean (Z-score 0)
     - Stoploss: Either -10% loss or residual crosses a Z-score of 2
+  
+![Backtesting Example](./imgs/apollohosp_hdfcbank.png)
 
 ## Future Improvements
 
