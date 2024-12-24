@@ -41,6 +41,12 @@ class Portfolio:
         ).ffill().fillna(0)
         return merged['net_perc'] + merged['notional_net_perc'] + self._capital_investment
     
+    def get_portfolio_drawdown(self):
+        cum_portfolio_value = self.get_portfolio_equity_curve()
+        peaks = cum_portfolio_value.cummax()
+        drawdowns = (peaks - cum_portfolio_value) * 100 / peaks
+        return drawdowns
+    
     def add_total_abs_net(self, date, abs_net):
         self._total_abs_net += abs_net
         self._total_abs_nets.append({'date': date, 'abs_net': self._total_abs_net})
