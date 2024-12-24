@@ -23,20 +23,18 @@ I utilize the **Augmented Dickey-Fuller (ADF)** test to test the null hypothesis
   - **Strategy**: Invest _2 units (20% of initial portoflio capital)_ in a pair strategy if the pair's residual breaches the _Z-score of 1_
     - **Target**: Either _+10%_ profit or residual returns to its mean _(Z-score 0)_
     - **Stoploss**: Either _-10%_ loss or residual crosses a _Z-score of 2_
-  
-![Backtesting Example](./imgs/apollohosp_hdfcbank.png)
 
 ## Results
 The portfolio of the 10 arbitrarily chosen pairs obtained a return of **4.97%** for the year 2023 with a max drawdown of **0.26%** (results in ```backtesting.ipynb```) and the following trade statistics were obeserved:
-- _Trade Win Percentage: 63%_
-- _Trade Sharpe: 0.2_
-- _Trade Sortino: 0.42_
-- _Average Trade Duration: 16 days_
+- _Trade Win Percentage: **63%**_
+- _Trade Sharpe: **0.2**_
+- _Trade Sortino: **0.42**_
+- _Average Trade Duration: **16 days**_
 ### Portfolio Equity Curve
 ![Portfolio Equity Curve](./imgs/portfolio-equity-curve.png)
 
 ### Portfolio Drawdown Curve
-![Portfolio Drawdown Curve](./imgs/portfolio-equity-curve.png)
+![Portfolio Drawdown Curve](./imgs/portfolio-drawdown-percentage.png)
 
 ## Future Improvements
 
