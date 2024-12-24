@@ -14,21 +14,32 @@ I utilize the **Augmented Dickey-Fuller (ADF)** test to test the null hypothesis
 
 - Retrieve closing prices of **NIFTY 50 (2024)** stocks for the years **2017 to 2022** (```data_procurement.ipynb```) and save in a file ```data/closing_prices.csv```
 - Analyze stocks, find a list of cointegrated pairs and prepare residual data for backtesting (```finding_cointegrated_pairs.ipynb```)
-  - Split data into training (2017 to 2022) and testing (2023)
-  - For each pair combination (50 * 49 = 2450), regress the pairs against each other and test their residuals for stationarity
+  - Split data into training _(2017 to 2022)_ and testing _(2023)_
+  - For each pair combination _(50 * 49 = 2450)_, regress the pairs against each other and test their residuals for stationarity
   - If the pairs have a stationary root, save the model into a dictionary (```COINTEGRATED_PAIR_MODELS```)
   - Arbitrarily shortlist 10 pairs save their residuals in a data frame in ```data/backtesting_data.csv```
 - Backtest using testing data from the year **2023** to evaluate the portfolio’s performance. (```backtesting.ipynb```)
-  - Portfolio starting capital: 10
-  - Strategy: Invest 2 (20% of initial portoflio capital) in a pair strategy if the pair's residual breaches the Z-score of 1
-    - Target: Either +10% profit or residual returns to its mean (Z-score 0)
-    - Stoploss: Either -10% loss or residual crosses a Z-score of 2
-  
-![Backtesting Example](./imgs/apollohosp_hdfcbank.png)
+  - **Portfolio starting capital**: _10_
+  - **Strategy**: Invest _2 units (20% of initial portoflio capital)_ in a pair strategy if the pair's residual breaches the _Z-score of 1_
+    - **Target**: Either _+10%_ profit or residual returns to its mean _(Z-score 0)_
+    - **Stoploss**: Either _-10%_ loss or residual crosses a _Z-score of 2_
+
+## Results
+The portfolio of the 10 arbitrarily chosen pairs obtained a return of **4.97%** for the year 2023 with a max drawdown of **0.26%** (results in ```backtesting.ipynb```) and the following trade statistics were obeserved:
+- _Trade Win Percentage: **63%**_
+- _Trade Sharpe: **0.2**_
+- _Trade Sortino: **0.42**_
+- _Average Trade Duration: **16 days**_
+### Portfolio Equity Curve
+![Portfolio Equity Curve](./imgs/portfolio-equity-curve.png)
+
+### Portfolio Drawdown Curve
+![Portfolio Drawdown Curve](./imgs/portfolio-drawdown-percentage.png)
 
 ## Future Improvements
 
 - Ranking metric to shortlist the top pairs.
+- Long-short ticker weights proportional to regression coefficients.
 - Implement backtesting for a longer time period.
-- Structural detection
+- Structural change detection.
 
