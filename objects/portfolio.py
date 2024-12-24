@@ -30,16 +30,16 @@ class Portfolio:
         self._current_date = None
     
     def get_portfolio_equity_curve(self):
-        realised_net_percs = pd.DataFrame(self._total_net_percs).set_index('date')
-        notional_net_percs = pd.DataFrame(self._notional_net_percs).set_index('date')
+        realised_abs_net = pd.DataFrame(self._total_abs_nets).set_index('date')
+        notional_abs_net = pd.DataFrame(self._notional_abs_nets).set_index('date')
         merged = pd.merge(
-            left=realised_net_percs,
+            left=realised_abs_net,
             left_index=True,
-            right=notional_net_percs,
+            right=notional_abs_net,
             right_index=True,
             how='outer'
         ).ffill().fillna(0)
-        return merged['net_perc'] + merged['notional_net_perc'] + self._capital_investment
+        return merged['abs_net'] + merged['notional_abs_net'] + self._capital_investment
     
     def get_portfolio_drawdown(self):
         cum_portfolio_value = self.get_portfolio_equity_curve()

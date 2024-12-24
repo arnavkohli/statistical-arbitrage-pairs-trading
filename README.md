@@ -25,16 +25,16 @@ I utilize the **Augmented Dickey-Fuller (ADF)** test to test the null hypothesis
     - **Stoploss**: Either _-10%_ loss or residual crosses a _Z-score of 2_
 
 ## Results
-The portfolio of the 10 arbitrarily chosen pairs obtained a return of **4.97%** for the year 2023 with a max drawdown of **0.26%** (results in ```backtesting.ipynb```) and the following trade statistics were obeserved:
+The portfolio of the 10 arbitrarily chosen pairs obtained a return of **4.97%** for the year 2023 with a max drawdown of **2.57%** (results in ```backtesting.ipynb```) and the following trade statistics were obeserved:
 - _Trade Win Percentage: **63%**_
 - _Trade Sharpe: **0.2**_
 - _Trade Sortino: **0.42**_
 - _Average Trade Duration: **16 days**_
 ### Portfolio Equity Curve
-![Portfolio Equity Curve](./imgs/portfolio-equity-curve.png)
+![Portfolio Equity Curve](./imgs/equity-curve.png)
 
 ### Portfolio Drawdown Curve
-![Portfolio Drawdown Curve](./imgs/portfolio-drawdown-percentage.png)
+![Portfolio Drawdown Curve](./imgs/drawdown-percentage.png)
 
 ## Future Improvements
 
