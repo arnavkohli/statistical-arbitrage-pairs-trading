@@ -85,6 +85,7 @@ class PairsBacktester:
         for position in self.get_portfolio().get_open_positions():
             summary = position.info()
             summary['date'] = date
+            
 
             new_notional_abs_net += position.get_abs_net()
             new_notional_net_perc += position.get_abs_net() / self.get_portfolio().get_capital_investment()
