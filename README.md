@@ -31,10 +31,10 @@ The portfolio of the 10 arbitrarily chosen pairs obtained a return of **4.97%** 
 - _Trade Sortino: **0.42**_
 - _Average Trade Duration: **16 days**_
 ### Portfolio Equity Curve
-![Portfolio Equity Curve](./imgs/portfolio-equity-curve.png)
+![Portfolio Equity Curve](./imgs/equity-curve.png)
 
 ### Portfolio Drawdown Curve
-![Portfolio Drawdown Curve](./imgs/portfolio-drawdown-percentage.png)
+![Portfolio Drawdown Curve](./imgs/drawdown-percentage.png)
 
 ## Future Improvements
 
